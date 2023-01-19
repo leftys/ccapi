@@ -1,8 +1,7 @@
-# This can be (slowly) crosscompiled on x86 processors using https://www.stereolabs.com/docs/docker/building-arm-container-on-x86/
+# Arm can be (slowly) crosscompiled on x86 processors using https://www.stereolabs.com/docs/docker/building-arm-container-on-x86/
 
-# ARG TARGETPLATFORM
-# FROM arm64v8/alpine:latest as build
-FROM alpine:latest as build
+ARG TARGETPLATFORM
+FROM ${TARGETPLATFORM}/alpine:latest as build
 
 LABEL description="Build container - ccapi"
 
@@ -14,15 +13,14 @@ ADD dependency /src/dependency
 COPY docker_test/CMakeLists.txt /src/docker_test/
 COPY docker_test/cotire.cmake /src/docker_test/
 RUN touch /src/docker_test/main.cpp
-# ADD docker_test/main.cpp /src/docker_test/
 WORKDIR /src/docker_test/out
+#  -DCCAPI_USE_SINGLE_THREAD:BOOL=ON
 RUN cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_VERBOSE_MAKEFILE:BOOL=ON ..
 ADD docker_test/main.cpp /src/docker_test/
-RUN --mount=type=cache,target=/src/docker_test/out/CMakeFiles,id=cache-amd64 \
+RUN --mount=type=cache,target=/src/docker_test/out/CMakeFiles,id=cache-${TARGETPLATFORM} \
     cmake --build .
 
-# FROM arm64v8/alpine:latest as runtime
-FROM alpine:latest as runtime
+FROM ${TARGETPLATFORM}/alpine:latest as runtime
 
 LABEL description="Run container - ccapi"
 
@@ -34,4 +32,3 @@ COPY --from=build /src/docker_test/out/market_making /src/
 WORKDIR /src/
 
 CMD ./market_making
-# ENTRYPOINT ["./market_making"]
