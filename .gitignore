@@ -4,6 +4,9 @@ app/.idea/
 app/cmake-build-debug/
 include/.idea/
 
+# vscode
+.vscode
+
 # Deploy
 build/
 *_dev.env
@@ -148,3 +151,8 @@ docs/_build/
 # Other
 .project
 .venv/
+.env
+
+CMakeFiles
+Makefile
+cmake_install.cmake
