@@ -365,6 +365,9 @@ class Service : public std::enable_shared_from_this<Service> {
     }
     CCAPI_LOGGER_TRACE("connected");
     beast::ssl_stream<beast::tcp_stream>& stream = *httpConnectionPtr->streamPtr;
+    // #ifdef CCAPI_DISABLE_NAGLE_ALGORITHM
+    beast::get_lowest_layer(stream).socket().set_option(tcp::no_delay(true));
+    // #endif
     CCAPI_LOGGER_TRACE("before async_handshake");
     stream.async_handshake(ssl::stream_base::client,
                            beast::bind_front_handler(&Service::onHandshake, shared_from_this(), httpConnectionPtr, req, errorHandler, responseHandler));
@@ -471,6 +474,9 @@ class Service : public std::enable_shared_from_this<Service> {
     }
     CCAPI_LOGGER_TRACE("connected");
     beast::ssl_stream<beast::tcp_stream>& stream = *httpConnectionPtr->streamPtr;
+    // #ifdef CCAPI_DISABLE_NAGLE_ALGORITHM
+    beast::get_lowest_layer(stream).socket().set_option(tcp::no_delay(true));
+    // #endif
     CCAPI_LOGGER_TRACE("before async_handshake");
     stream.async_handshake(ssl::stream_base::client,
                            beast::bind_front_handler(&Service::onHandshake_2, shared_from_this(), httpConnectionPtr, request, req, retry, eventQueuePtr));
@@ -652,7 +658,7 @@ class Service : public std::enable_shared_from_this<Service> {
             return;
           }
           std::shared_ptr<HttpConnection> httpConnectionPtr(new HttpConnection(this->hostRest, this->portRest, streamPtr));
-          CCAPI_LOGGER_TRACE("about to perform request with new httpConnectionPtr " + toString(*httpConnectionPtr));
+          CCAPI_LOGGER_WARN("about to perform request with new httpConnectionPtr " + toString(*httpConnectionPtr));
           this->performRequest(httpConnectionPtr, request, req, retry, eventQueuePtr);
         } else {
           std::shared_ptr<HttpConnection> httpConnectionPtr(nullptr);
@@ -673,7 +679,7 @@ class Service : public std::enable_shared_from_this<Service> {
               return;
             }
             httpConnectionPtr = std::make_shared<HttpConnection>(this->hostRest, this->portRest, streamPtr);
-            CCAPI_LOGGER_TRACE("about to perform request with new httpConnectionPtr " + toString(*httpConnectionPtr));
+            CCAPI_LOGGER_WARN("about to perform request with new httpConnectionPtr " + toString(*httpConnectionPtr));
             this->performRequest(httpConnectionPtr, request, req, retry, eventQueuePtr);
           }
         }
@@ -705,6 +711,8 @@ class Service : public std::enable_shared_from_this<Service> {
     req.version(11);
     if (this->sessionOptions.enableOneHttpConnectionPerRequest) {
       req.keep_alive(false);
+    } else {
+      req.keep_alive(true);
     }
     req.set(http::field::host, this->hostRest);
     req.set(http::field::user_agent, BOOST_BEAST_VERSION_STRING);

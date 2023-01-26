@@ -261,6 +261,7 @@
 #define CCAPI_WEBSOCKET_KUCOIN_FUTURES_CHANNEL_MARKET_LEVEL2DEPTH50 "/contractMarket/level2Depth50"
 #define CCAPI_WEBSOCKET_FTX_BASE_CHANNEL_TRADES "trades"
 #define CCAPI_WEBSOCKET_FTX_BASE_CHANNEL_ORDERBOOKS "orderbook"
+#define CCAPI_WEBSOCKET_FTX_BASE_CHANNEL_TICKER "ticker"
 #define CCAPI_WEBSOCKET_DERIBIT_CHANNEL_TRADES "trades.{instrument_name}.{interval}"
 #define CCAPI_WEBSOCKET_DERIBIT_CHANNEL_BOOK "book.{instrument_name}.{group}.{depth}.{interval}"
 #define CCAPI_WEBSOCKET_DERIBIT_CHANNEL_BOOK_TBT "book.{instrument_name}.{interval}"
@@ -474,7 +475,7 @@
 
 // start: exchange REST urls
 #ifndef CCAPI_COINBASE_URL_REST_BASE
-#define CCAPI_COINBASE_URL_REST_BASE "https://api.pro.coinbase.com"
+#define CCAPI_COINBASE_URL_REST_BASE "https://api.exchange.coinbase.com"
 #endif
 #ifndef CCAPI_GEMINI_URL_REST_BASE
 #define CCAPI_GEMINI_URL_REST_BASE "https://api.gemini.com"
@@ -639,7 +640,7 @@
 
 // start: exchange WS urls
 #ifndef CCAPI_COINBASE_URL_WS_BASE
-#define CCAPI_COINBASE_URL_WS_BASE "wss://ws-feed.pro.coinbase.com"
+#define CCAPI_COINBASE_URL_WS_BASE "wss://ws-feed.exchange.coinbase.com"
 #endif
 #ifndef CCAPI_GEMINI_URL_WS_BASE
 #define CCAPI_GEMINI_URL_WS_BASE "wss://api.gemini.com"
@@ -744,7 +745,7 @@
 
 // start: exchange FIX urls
 #ifndef CCAPI_COINBASE_URL_FIX_BASE
-#define CCAPI_COINBASE_URL_FIX_BASE "tcp+ssl://fix.pro.coinbase.com:4198"
+#define CCAPI_COINBASE_URL_FIX_BASE "tcp+ssl://fix.exchange.coinbase.com:4198"
 #endif
 #ifndef CCAPI_GEMINI_URL_FIX_HOST
 #define CCAPI_GEMINI_URL_FIX_HOST ""

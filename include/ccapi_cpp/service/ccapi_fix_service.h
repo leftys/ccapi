@@ -1,6 +1,12 @@
 #ifndef INCLUDE_CCAPI_CPP_SERVICE_CCAPI_FIX_SERVICE_H_
 #define INCLUDE_CCAPI_CPP_SERVICE_CCAPI_FIX_SERVICE_H_
 #ifdef CCAPI_ENABLE_SERVICE_FIX
+#ifndef CCAPI_FIX_READ_BUFFER_SIZE
+#define CCAPI_FIX_READ_BUFFER_SIZE 1 << 20
+#endif
+#ifndef CCAPI_FIX_WRITE_BUFFER_SIZE
+#define CCAPI_FIX_WRITE_BUFFER_SIZE 1 << 20
+#endif
 #include "ccapi_cpp/service/ccapi_service.h"
 #include "hffix.hpp"
 namespace hff = hffix;
@@ -378,7 +384,7 @@ class FixService : public Service {
     auto& connectionId = fixConnectionPtr->id;
     auto& writeMessageBuffer = this->writeMessageBufferByConnectionIdMap[connectionId];
     auto& writeMessageBufferWrittenLength = this->writeMessageBufferWrittenLengthByConnectionIdMap[connectionId];
-    size_t n = 0;
+    size_t n = writeMessageBufferWrittenLength;
     for (const auto& param : paramList) {
       auto commonParam = this->createCommonParam(connectionId, nowFixTimeStr);
       hff::message_writer messageWriter(writeMessageBuffer.data() + n, writeMessageBuffer.data() + writeMessageBuffer.size());
@@ -399,11 +405,13 @@ class FixService : public Service {
       n += messageWriter.message_end() - messageWriter.message_begin();
     }
     CCAPI_LOGGER_DEBUG("about to send " + printableString(writeMessageBuffer.data(), n));
+    CCAPI_LOGGER_TRACE("writeMessageBufferWrittenLength = " + toString(writeMessageBufferWrittenLength));
     if (writeMessageBufferWrittenLength == 0) {
       CCAPI_LOGGER_TRACE("about to start write");
       this->startWrite_3(fixConnectionPtr, writeMessageBuffer.data(), n);
     }
-    writeMessageBufferWrittenLength += n;
+    writeMessageBufferWrittenLength = n;
+    CCAPI_LOGGER_TRACE("writeMessageBufferWrittenLength = " + toString(writeMessageBufferWrittenLength));
   }
   void onPongByMethod(PingPongMethod method, std::shared_ptr<FixConnection<T>> fixConnectionPtr, const TimePoint& timeReceived) {
     CCAPI_LOGGER_FUNCTION_ENTER;
@@ -521,9 +529,9 @@ class FixService : public Service {
     return {};
   }
   const size_t readMessageChunkSize = CCAPI_HFFIX_READ_MESSAGE_CHUNK_SIZE;
-  std::map<std::string, std::array<char, 1 << 20>> readMessageBufferByConnectionIdMap;
+  std::map<std::string, std::array<char, CCAPI_FIX_READ_BUFFER_SIZE>> readMessageBufferByConnectionIdMap;
   std::map<std::string, size_t> readMessageBufferReadLengthByConnectionIdMap;
-  std::map<std::string, std::array<char, 1 << 20>> writeMessageBufferByConnectionIdMap;
+  std::map<std::string, std::array<char, CCAPI_FIX_WRITE_BUFFER_SIZE>> writeMessageBufferByConnectionIdMap;
   std::map<std::string, size_t> writeMessageBufferWrittenLengthByConnectionIdMap;
   std::map<std::string, std::shared_ptr<FixConnection<T>>> fixConnectionPtrByIdMap;
   std::map<std::string, int> sequenceSentByConnectionIdMap;
