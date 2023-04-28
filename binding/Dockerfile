@@ -15,7 +15,7 @@ ADD include /src/include
 ADD dependency /src/dependency
 ADD binding /src/binding
 WORKDIR /src/binding/out
-RUN update-alternatives --install /usr/bin/python python /usr/bin/python3.11 1 && pip install wheel setuptools
+RUN update-alternatives --install /usr/bin/python python /usr/bin/python3.11 1
 RUN --mount=type=cache,target=/src/binding/out/CMakeFiles,id=binding-cache2-${TARGETPLATFORM} \
 	cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_VERBOSE_MAKEFILE:BOOL=ON -DBUILD_VERSION=0.2.0 -DPython_EXECUTABLE=/usr/bin/python3.11 \
 	-DBUILD_PYTHON:BOOL=ON -DCMAKE_PROJECT_INCLUDE=/src/binding/user_specified_cmake_include.cmake .. && \

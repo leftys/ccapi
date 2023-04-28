@@ -159,3 +159,8 @@ package-lock.json
 CMakeFiles
 Makefile
 cmake_install.cmake
+swig_interface*.cxx
+swig_interface*.h
+binding/python/**/ccapi.py
+binding/python/**/setup.py
+/out
