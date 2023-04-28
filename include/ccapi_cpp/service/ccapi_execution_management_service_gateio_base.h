@@ -46,6 +46,7 @@ class ExecutionManagementServiceGateioBase : public ExecutionManagementService {
     if (!headerString.empty()) {
       headerString += "\r\n";
     }
+    headerString += "X-Gate-Channel-Id:hummingbot\r\n";
     headerString += "SIGN:" + signature;
   }
   void signRequest(http::request<http::string_body>& req, const std::string& path, const std::string& queryString, const std::string& body,

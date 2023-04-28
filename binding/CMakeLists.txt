@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.17)
+cmake_minimum_required(VERSION 3.16)
 set(NAME binding)
 set(BUILD_VERSION "1.0.0" CACHE STRING "User-specified build version")
 message(STATUS "BUILD_VERSION: ${BUILD_VERSION}")
