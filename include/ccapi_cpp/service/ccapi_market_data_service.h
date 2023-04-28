@@ -219,7 +219,7 @@ class MarketDataService : public Service {
                 this->sessionOptions.warnLateEventMaxMilliseconds &&
             marketDataMessage.recapType == MarketDataMessage::RecapType::NONE) {
           CCAPI_LOGGER_WARN("late websocket message: timeReceived = " + toString(timeReceived) + ", marketDataMessage.tp = " + toString(marketDataMessage.tp) +
-                            ", wsConnection = " + toString(wsConnection));
+                            ", wsConnection url = " + toString(wsConnection.url) + ", group = " + toString(wsConnection.group));
         }
 
         std::string& exchangeSubscriptionId = marketDataMessage.exchangeSubscriptionId;
