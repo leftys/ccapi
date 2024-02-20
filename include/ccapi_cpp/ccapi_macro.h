@@ -678,7 +678,7 @@
 #define CCAPI_BINANCE_COIN_FUTURES_LISTEN_KEY_PATH "/dapi/v1/listenKey"
 #endif
 #ifndef CCAPI_HUOBI_URL_REST_BASE
-#define CCAPI_HUOBI_URL_REST_BASE "https://api.huobi.pro"
+#define CCAPI_HUOBI_URL_REST_BASE "https://api-aws.huobi.pro"
 #endif
 #ifndef CCAPI_HUOBI_USDT_SWAP_URL_REST_BASE
 #define CCAPI_HUOBI_USDT_SWAP_URL_REST_BASE "https://api.hbdm.com"
@@ -840,7 +840,7 @@
 #define CCAPI_BINANCE_COIN_FUTURES_URL_WS_BASE "wss://dstream.binance.com"
 #endif
 #ifndef CCAPI_HUOBI_URL_WS_BASE
-#define CCAPI_HUOBI_URL_WS_BASE "wss://api.huobi.pro"
+#define CCAPI_HUOBI_URL_WS_BASE "wss://api-aws.huobi.pro"
 #endif
 #ifndef CCAPI_HUOBI_USDT_SWAP_URL_WS_BASE
 #define CCAPI_HUOBI_USDT_SWAP_URL_WS_BASE "wss://api.hbdm.com"

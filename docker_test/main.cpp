@@ -10,6 +10,9 @@ class MyEventHandler : public EventHandler {
   bool processEvent(const Event& event, Session* session) override {
     if (event.getType() == Event::Type::SUBSCRIPTION_DATA) {
       for (const auto& message : event.getMessageList()) {
+        if message.getType() == Message::Type::MARKET_DATA_EVENTS_MARKET_DEPTH) {
+          std::cout << "Received at " << std::chrono::high_resolution_clock::now().time_since_epoch().count() << std::endl;
+        }
         for (const auto& element : message.getElementList()) {
           std::lock_guard<std::mutex> lock(m);
           if (element.has("BID_PRICE")) {
@@ -112,6 +115,8 @@ int main(int argc, char** argv) {
   Session session(sessionOptions, sessionConfigs, &eventHandler);
   Subscription subscription("binance", "BTCUSDT", "MARKET_DEPTH");
   session.subscribe(subscription);
+  // Subscription subscription2("binance", "BTCUSDT", "TRADE");
+  // session.subscribe(subscription2);
   while (!should_exit) {
     auto bbo = eventHandler.getBBO();
     if (!bbo.first.empty() && !bbo.second.empty()) {
