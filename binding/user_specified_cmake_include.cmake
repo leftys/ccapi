@@ -59,5 +59,5 @@ add_compile_definitions(CCAPI_ENABLE_LOG_DEBUG)
 #
 # add_compile_definitions(CCAPI_ENABLE_LOG_FATAL)
 #
-# find_package(ZLIB REQUIRED)
-# link_libraries(ZLIB::ZLIB)
+find_package(ZLIB REQUIRED)
+link_libraries(ZLIB::ZLIB)

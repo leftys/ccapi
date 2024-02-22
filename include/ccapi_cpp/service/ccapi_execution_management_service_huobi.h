@@ -415,7 +415,9 @@ class ExecutionManagementServiceHuobi : public ExecutionManagementServiceHuobiBa
           element.insert(CCAPI_EM_ORDER_SIDE, std::string(data["orderSide"].GetString()) == "buy" ? CCAPI_EM_ORDER_SIDE_BUY : CCAPI_EM_ORDER_SIDE_SELL);
           element.insert(CCAPI_IS_MAKER, data["aggressor"].GetBool() ? "0" : "1");
           element.insert(CCAPI_EM_ORDER_ID, std::string(data["orderId"].GetString()));
-          element.insert(CCAPI_EM_CLIENT_ORDER_ID, std::string(data["clientOrderId"].GetString()));
+	        if (data.HasMember("clientOrderId")) {
+	          element.insert(CCAPI_EM_CLIENT_ORDER_ID, std::string(data["clientOrderId"].GetString()));
+	        }
           element.insert(CCAPI_EM_ORDER_INSTRUMENT, instrument);
           element.insert(CCAPI_EM_ORDER_FEE_QUANTITY, std::string(data["transactFee"].GetString()));
           element.insert(CCAPI_EM_ORDER_FEE_ASSET, std::string(data["feeCurrency"].GetString()));

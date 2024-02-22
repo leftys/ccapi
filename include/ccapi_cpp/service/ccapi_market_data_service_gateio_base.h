@@ -208,20 +208,20 @@ class MarketDataServiceGateioBase : public MarketDataService {
       std::string eventType = document["event"].GetString();
       if (eventType == "update" || eventType == "all") {
         std::string channel = document["channel"].GetString();
+        std::string symbolId;
         const rj::Value& result = document["result"];
         std::string originalChannelId(channel);
         if (result.IsObject()) {
           auto it = result.FindMember(symbolName.c_str());
           auto its = result.FindMember("s");
-          symbol = it != result.MemberEnd() ? it->value.GetString() : (its != result.MemberEnd() ? its->value.GetString() : "");
+          symbolId = it != result.MemberEnd() ? it->value.GetString() : (its != result.MemberEnd() ? its->value.GetString() : "");
         }
         MarketDataMessage marketDataMessage;
         std::string exchangeSubscriptionId;
         std::string channelId;
-        std::string symbolId;
         std::map<std::string, std::string> optionMap;
-        if (!symbol.empty()) {
-          exchangeSubscriptionId = channel + "|" + symbol;
+        if (!symbolId.empty()) {
+          exchangeSubscriptionId = channel + "|" + symbolId;
           channelId = this->channelIdSymbolIdByConnectionIdExchangeSubscriptionIdMap[wsConnection.id][exchangeSubscriptionId][CCAPI_CHANNEL_ID];
           symbolId = this->channelIdSymbolIdByConnectionIdExchangeSubscriptionIdMap[wsConnection.id][exchangeSubscriptionId][CCAPI_SYMBOL_ID];
           optionMap = this->optionMapByConnectionIdChannelIdSymbolIdMap[wsConnection.id][channelId][symbolId];
@@ -288,8 +288,8 @@ class MarketDataServiceGateioBase : public MarketDataService {
         } else if (channelId == this->websocketChannelTrades) {
           if (this->isDerivatives) {
             for (const auto& x : result.GetArray()) {
-              symbol = x["contract"].GetString();
-              exchangeSubscriptionId = channel + "|" + symbol;
+              symbolId = x["contract"].GetString();
+              exchangeSubscriptionId = channel + "|" + symbolId;
               MarketDataMessage marketDataMessage;
               marketDataMessage.type = MarketDataMessage::Type::MARKET_DATA_EVENTS_TRADE;
               marketDataMessage.exchangeSubscriptionId = exchangeSubscriptionId;

@@ -4,3 +4,6 @@ cmake_install.cmake
 .env
 build
 binding/Dockerfile
+binding/build
+out
+*.whl
