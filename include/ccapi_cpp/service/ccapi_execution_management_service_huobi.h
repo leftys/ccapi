@@ -218,13 +218,24 @@ class ExecutionManagementServiceHuobi : public ExecutionManagementServiceHuobiBa
         }
       } break;
       case Request::Operation::GET_ACCOUNT_BALANCES: {
+        float lastBalance = 0.0;
         for (const auto& x : data["list"].GetArray()) {
           if (std::string(x["type"].GetString()) == "trade") {
             Element element;
             element.insert(CCAPI_EM_ASSET, x["currency"].GetString());
             element.insert(CCAPI_EM_QUANTITY_AVAILABLE_FOR_TRADING, x["balance"].GetString());
-            element.insert(CCAPI_EM_QUANTITY_TOTAL, x["balance"].GetString());
+            lastBalance = std::stof(x["balance"].GetString());
             elementList.emplace_back(std::move(element));
+          }
+          if (std::string(x["type"].GetString()) == "frozen") {
+            Element &element = elementList.back();
+            if (element.getValue(CCAPI_EM_ASSET) != x["currency"].GetString()) {
+              CCAPI_LOGGER_WARN("frozen balance and trade balance have different currency");
+            } else {
+              float totalBalance = lastBalance + std::stof(x["balance"].GetString());
+              element.insert(CCAPI_EM_QUANTITY_TOTAL, std::to_string(totalBalance));
+              lastBalance = 0.0;
+            }
           }
         }
       } break;
