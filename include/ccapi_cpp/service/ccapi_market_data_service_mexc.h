@@ -241,6 +241,7 @@ class MarketDataServiceMexc : public MarketDataService {
                               {CCAPI_LIMIT, "limit"},
                           });
         this->appendSymbolId(queryString, symbolId, "symbol");
+	queryString.pop_back();
         req.target(target + "?" + queryString);
       } break;
       case Request::Operation::GET_RECENT_AGG_TRADES: {
@@ -253,6 +254,7 @@ class MarketDataServiceMexc : public MarketDataService {
                               {CCAPI_LIMIT, "limit"},
                           });
         this->appendSymbolId(queryString, symbolId, "symbol");
+	queryString.pop_back();
         req.target(target + "?" + queryString);
       } break;
       case Request::Operation::GET_INSTRUMENT: {
@@ -260,6 +262,7 @@ class MarketDataServiceMexc : public MarketDataService {
         auto target = this->getInstrumentsTarget;
         std::string queryString;
         this->appendSymbolId(queryString, symbolId, "symbol");
+	queryString.pop_back();
         req.target(target + "?" + queryString);
       } break;
       case Request::Operation::GET_INSTRUMENTS: {
