@@ -1,0 +1,16 @@
+include_guard(DIRECTORY)
+add_compile_definitions(CCAPI_ENABLE_SERVICE_MARKET_DATA)
+add_compile_definitions(CCAPI_ENABLE_EXCHANGE_GATEIO)
+add_compile_definitions(CCAPI_ENABLE_EXCHANGE_HUOBI)
+add_compile_definitions(CCAPI_ENABLE_EXCHANGE_OKX)
+
+if (CMAKE_BUILD_TYPE STREQUAL "Debug")
+  add_compile_definitions(CCAPI_ENABLE_LOG_TRACE)
+#  add_compile_definitions(CCAPI_ENABLE_LOG_DEBUG)
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O0")
+else()
+  add_compile_definitions(CCAPI_ENABLE_LOG_WARN)
+endif()
+
+find_package(ZLIB REQUIRED)
+link_libraries(ZLIB::ZLIB)
